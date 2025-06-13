@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Availability Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Reset & Body Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #ECF6FF 100%); /* Softer, medical-themed gradient */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Allow content to stack */
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .hero h1 {
+            font-size: 2.8em; /* Slightly larger heading */
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #234A6B ;  /* Stronger blue */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .hero p {
+            font-size: 1.1em;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: #ffffff; /* Pure white for a cleaner look */
+            border-radius: 20px; /* Slightly less rounded */
+            padding: 35px; /* More padding */
+            width: 100%;
+            max-width: 450px; /* Slightly wider */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+            position: relative;
+            border: 1px solid #e0e0e0; /* Subtle border */
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 25px; /* Increased margin */
+        }
+
+        .form-label {
+            display: block;
+            font-size: 15px; /* Slightly larger label font */
+            font-weight: 600; /* Bolder label */
+            color: #444;
+            margin-bottom: 10px; /* More space below label */
+        }
+
+        .required {
+            color: #e74c3c;
+            margin-left: 4px;
+        }
+
+        /* Form Inputs & Selects */
+        .form-input,
+        .form-select,
+        .date-input,
+        .time-select {
+            width: 100%;
+            padding: 14px 18px; /* More padding */
+            border: 1px solid #dcdcdc; /* Subtle border */
+            border-radius: 10px; /* Rounded corners */
+            background: #f9f9f9; /* Light background for inputs */
+            font-size: 15px;
+            color: #333;
+            outline: none;
+            transition: all 0.3s ease; /* Smooth transition for all properties */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Inner shadow for depth */
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .date-input:focus,
+        .time-select:focus {
+            border-color: #007bff; /* Blue border on focus */
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2); /* Softer, broader shadow */
+            background: #ffffff; /* White background on focus */
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center; /* Adjust arrow position */
+            background-size: 18px; /* Adjust arrow size */
+            padding-right: 45px; /* Space for the arrow */
+        }
+
+        /* Availability Section */
+        .availability-section {
+            margin-top: 30px;
+            border-top: 1px solid #eee; /* Separator line */
+            padding-top: 25px;
+        }
+
+        .availability-title {
+            font-size: 1.1em;
+            font-weight: 700; /* Bolder title */
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .availability-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px; /* Increased margin */
+            padding: 10px 0; /* Add some padding */
+            border-bottom: 1px dashed #eee; /* Dashed line for visual separation */
+        }
+
+        .availability-row:last-child {
+            border-bottom: none; /* No border for the last row */
+            margin-bottom: 0;
+        }
+
+        .availability-label {
+            font-size: 15px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .unavailable-note {
+            font-size: 13px; /* Slightly larger note */
+            color: #888;
+            margin-left: 6px;
+        }
+
+        .date-input {
+            width: 160px; /* Wider date input */
+            padding: 10px 14px; /* Adjusted padding */
+        }
+
+        .time-slot-container {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* More space between time selects */
+        }
+
+        .time-select {
+            width: 130px; /* Wider time select */
+            padding: 10px 14px;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background: linear-gradient(90deg, #3F5DD8 100%); /* Blue gradient */
+            color: white;
+            border: none;
+            border-radius: 25px; /* More rounded button */
+            padding: 14px 40px; /* More padding */
+            font-size: 16px; /* Larger font */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 40px auto 0; /* More margin */
+            min-width: 120px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25); /* Stronger shadow */
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #003f7f 100%); /* Darker gradient on hover */
+            transform: translateY(-2px); /* Lift effect */
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.35); /* More intense shadow */
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Calendar icon for date input */
+        .date-input::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .date-input::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+        }
+
+        /* Responsive design */
+        @media (max-width: 500px) {
+            .form-container {
+                padding: 25px;
+                margin: 10px;
+            }
+
+            .hero h1 {
+                font-size: 2.2em;
+            }
+
+            .availability-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .date-input,
+            .time-select {
+                width: 100%;
+            }
+
+            .time-slot-container {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .time-select {
+                width: 100%; /* Ensure time selects take full width in small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <h1 class="display-5">DOCTOR AVAILABILITY</h1>
+        <p class="mt-3">Easily manage and update doctor schedules.</p>
+    </section>
+
+    <div class="form-container">
+        <form id="doctorAvailabilityForm">
+            <div class="form-group">
+                <label for="doctorName" class="form-label">Name of the doctor<span class="required">*</span></label>
+                <input type="text" id="doctorName" name="doctorName" class="form-input" placeholder="e.g., Dr. Jane Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="specialty" class="form-label">Specialty<span class="required">*</span></label>
+                <select id="specialty" name="specialty" class="form-select" required>
+                    <option value="">Select Specialty</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="dermatology">Dermatology</option>
+                    <option value="endocrinology">Endocrinology</option>
+                    <option value="gastroenterology">Gastroenterology</option>
+                    <option value="general-medicine">General Medicine</option>
+                    <option value="gynecology">Gynecology</option>
+                    <option value="neurology">Neurology</option>
+                    <option value="oncology">Oncology</option>
+                    <option value="orthopedics">Orthopedics</option>
+                    <option value="pediatrics">Pediatrics</option>
+                    <option value="psychiatry">Psychiatry</option>
+                    <option value="pulmonology">Pulmonology</option>
+                    <option value="urology">Urology</option>
+                </select>
+            </div>
+
+            <div class="availability-section">
+                <h3 class="availability-title">Set Availability</h3>
+                <div class="availability-row">
+                    <div class="availability-label">Available Time Slot<span class="required">*</span></div>
+                    <div class="time-slot-container">
+                        <select id="timeSlot" name="timeSlot" class="time-select" required>
+                            <option value="">Select Time</option>
+                            <option value="09:00-10:00">09:00 - 10:00 AM</option>
+                            <option value="10:00-11:00">10:00 - 11:00 AM</option>
+                            <option value="11:00-12:00">11:00 - 12:00 PM</option>
+                            <option value="12:00-13:00">12:00 - 01:00 PM</option>
+                            <option value="14:00-15:00">02:00 - 03:00 PM</option>
+                            <option value="15:00-16:00">03:00 - 04:00 PM</option>
+                            <option value="16:00-17:00">04:00 - 05:00 PM</option>
+                            <option value="17:00-18:00">05:00 - 06:00 PM</option>
+                            <option value="18:00-19:00">06:00 - 07:00 PM</option>
+                            <option value="19:00-20:00">07:00 - 08:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="availability-row">
+                    <div>
+                        <span class="availability-label">Set Unavailable Date</span>
+                        <span class="unavailable-note">(Optional)</span>
+                    </div>
+                    <div>
+                        <input type="date" id="unavailableDate" name="unavailableDate" class="date-input">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">SET AVAILABILITY</button>
+        </form>
+    </div>
+
+    <script>
+        // Set minimum date to today
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+        const day = String(today.getDate()).padStart(2, '0');
+        document.getElementById('unavailableDate').setAttribute('min', `${year}-${month}-${day}`);
+
+        // Form submission handler
+        document.getElementById('doctorAvailabilityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+
+            // Validate required fields
+            if (!data.doctorName || !data.specialty || !data.timeSlot) {
+                alert('Please fill in all required fields (Doctor Name, Specialty, and Available Time Slot).');
+                return;
+            }
+
+            // Show confirmation
+            let message = `Doctor Availability Set Successfully!\n\n`;
+            message += `Doctor: ${data.doctorName}\n`;
+            message += `Specialty: ${data.specialty.replace('-', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}\n`;
+            message += `Available Time: ${data.timeSlot}\n`;
+
+            if (data.unavailableDate) {
+                const unavailableDate = new Date(data.unavailableDate);
+                // Format the date to be more readable
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = unavailableDate.toLocaleDateString(undefined, options);
+                message += `Unavailable Date: ${formattedDate}\n`;
+            } else {
+                message += `Unavailable Date: Not set\n`;
+            }
+
+            alert(message);
+
+            // Reset form after submission
+            this.reset();
+            // Reset select styles if they were changed
+            document.getElementById('specialty').style.color = '';
+            document.getElementById('timeSlot').style.color = '';
+        });
+
+        // Dynamic form interactions (to make initial placeholder text light gray)
+        document.getElementById('specialty').addEventListener('change', function() {
+            this.style.color = this.value ? '#333' : '#888';
+        });
+        document.getElementById('timeSlot').addEventListener('change', function() {
+            this.style.color = this.value ? '#333' : '#888';
+        });
+
+        // Initialize select colors
+        document.addEventListener('DOMContentLoaded', () => {
+            const specialtySelect = document.getElementById('specialty');
+            const timeSlotSelect = document.getElementById('timeSlot');
+
+            specialtySelect.style.color = specialtySelect.value ? '#333' : '#888';
+            timeSlotSelect.style.color = timeSlotSelect.value ? '#333' : '#888';
+        });
+    </script>
+</body>
+</html>

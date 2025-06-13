@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Bookings System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Color Palette (inherited from previous UI) */
+    --primary-blue: #4169e1;
+    --light-blue-bg: #f0f8ff;
+    --container-bg: #e6f0fa; /* Slightly warmer light blue */
+    --cell-bg-odd: #f5fafd; /* Very light, almost white for odd rows */
+    --cell-bg-even: #eef7fc; /* Slightly darker for even rows */
+    --header-text-color: #ffffff;
+    --button-green: #6dd5ed; /* Brighter, more modern green for button */
+    --button-green-hover: #5acae1;
+    --border-color: #dae8f5;
+    --text-color: #333;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+    --dark-blue-text: #2c3e50; /* Darker blue for headings */
+    --medium-blue-text: #4169e1; /* Royal Blue for headings */
+
+    /* Specific for booking status */
+    --status-pending: #ffc107; /* Amber for pending */
+    --status-confirmed: #28a745; /* Green for confirmed */
+    --status-cancelled: #dc3545; /* Red for cancelled */
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-blue-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to top */
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px; /* More top padding */
+    box-sizing: border-box;
+  }
+
+  .heading-container {
+    width: 95%;
+    max-width: 1000px; /* Increased max-width for bookings table */
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0px; /* Adjust padding to align with table content */
+    align-self: center; /* Center the heading container */
+    text-align: left;
+  }
+
+  .heading {
+    font-size: 3em;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .heading .part1 {
+    color: var(--dark-blue-text);
+  }
+
+  .heading .part2 {
+    color: var(--medium-blue-text);
+  }
+
+  .table-container {
+    background-color: var(--container-bg);
+    border-radius: 18px;
+    box-shadow: 0 8px 25px var(--shadow-medium);
+    width: 95%;
+    max-width: 1000px; /* Increased max-width for bookings table */
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background-color: var(--primary-blue);
+    color: var(--header-text-color);
+    padding: 18px 15px;
+    text-align: left;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  th:first-child {
+    border-top-left-radius: 18px;
+  }
+  th:last-child {
+    border-top-right-radius: 18px;
+  }
+
+  td {
+    padding: 15px;
+    text-align: left;
+    font-size: 1em;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: var(--cell-bg-odd);
+  }
+  tbody tr:nth-child(even) {
+    background-color: var(--cell-bg-even);
+  }
+
+  tbody tr:hover {
+    background-color: #e0f2f7;
+    cursor: pointer;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Specific column alignment for actions and status */
+  td.status-cell, td.action-cell {
+    text-align: center;
+  }
+
+  .status-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px; /* Pill shape */
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    color: white; /* Default text color for tags */
+  }
+
+  .status-tag.pending {
+    background-color: var(--status-pending);
+    color: #333; /* Darker text for better visibility on amber */
+  }
+
+  .status-tag.confirmed {
+    background-color: var(--status-confirmed);
+  }
+
+  .status-tag.cancelled {
+    background-color: var(--status-cancelled);
+  }
+
+  .action-button {
+    background-color: var(--button-green);
+    color: var(--text-color);
+    padding: 8px 18px; /* Slightly smaller for multiple actions */
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px var(--shadow-light);
+    margin: 0 5px; /* Space between buttons */
+  }
+
+  .action-button:hover {
+    background-color: var(--button-green-hover);
+    transform: translateY(-1px);
+  }
+
+  .action-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .table-container, .heading-container {
+      max-width: 90%; /* Adjust max-width for medium screens */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .heading {
+      font-size: 2.2em;
+    }
+    .table-container {
+      border-radius: 10px;
+      padding: 15px;
+      width: 100%;
+      overflow-x: auto; /* Enable horizontal scroll for smaller screens */
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      min-width: 900px; /* Ensure enough width for scrolling */
+    }
+    th, td {
+      padding: 12px 10px;
+      font-size: 0.9em;
+    }
+    .action-button {
+      padding: 6px 15px;
+      font-size: 0.8em;
+    }
+    th:first-child, th:last-child {
+      border-radius: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .heading {
+      font-size: 1.8em;
+    }
+    th, td {
+      padding: 10px 8px;
+      font-size: 0.8em;
+    }
+    .status-tag {
+      padding: 4px 8px;
+      font-size: 0.7em;
+    }
+    .action-button {
+      padding: 5px 10px;
+      font-size: 0.75em;
+      margin: 0 2px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="heading-container">
+    <div class="heading">
+      <span class="part1">ADMIN</span><br>
+      <span class="part2">BOOKINGS</span>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>Patient Name</th>
+          <th>Doctor Name</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Service</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#BKG001</td>
+          <td>Pragati</td>
+          <td>Dr. Manoj Sharma</td>
+          <td>2025-06-15</td>
+          <td>10:00 AM</td>
+          <td>General Checkup</td>
+          <td class="status-cell"><span class="status-tag confirmed">Confirmed</span></td>
+          <td class="action-cell">
+            <button class="action-button">Accept</button>
+            <button class="action-button">Reject</button>
+          </td>
+        </tr>
+        <tr>
+          <td>#BKG002</td>
+          <td>Sahil</td>
+          <td>Dr. Manish dubey</td>
+          <td>2025-06-15</td>
+          <td>02:30 PM</td>
+          <td>Dental Cleaning</td>
+          <td class="status-cell"><span class="status-tag pending">Pending</span></td>
+          <td class="action-cell">
+          </td>
+        </tr>
+        <tr>
+          <td>#BKG003</td>
+          <td>Ansh</td>
+          <td>Dr. Nilesh roy</td>
+          <td>2025-06-16</td>
+          <td>09:00 AM</td>
+          <td>Eye Exam</td>
+          <td class="status-cell"><span class="status-tag confirmed">Confirmed</span></td>
+          <td class="action-cell">
+            <button class="action-button">Accept</button>
+            <button class="action-button">Reject</button>
+          </td>
+        </tr>
+        <tr>
+          <td>#BKG004</td>
+          <td>Akshat</td>
+          <td>Dr. Yash Thakur</td>
+          <td>2025-06-16</td>
+          <td>01:00 PM</td>
+          <td>Physical Therapy</td>
+          <td class="status-cell"><span class="status-tag cancelled">Cancelled</span></td>
+          <td class="action-cell">
+          </td>
+        </tr>
+        <tr>
+          <td>#BKG005</td>
+          <td>Gopika</td>
+          <td>Dr. Aditya Kumar</td>
+          <td>2025-06-17</td>
+          <td>11:45 AM</td>
+          <td>Consultation</td>
+          <td class="status-cell"><span class="status-tag pending">Pending</span></td>
+          <td class="action-cell">
+        
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

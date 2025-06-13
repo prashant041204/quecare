@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Event Task Status Report - Improved UI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary-blue: #4169e1;
+    --light-blue-bg: #f0f8ff;
+    --container-bg: #e6f0fa; /* Slightly warmer light blue */
+    --cell-bg-odd: #f5fafd; /* Very light, almost white for odd rows */
+    --cell-bg-even: #eef7fc; /* Slightly darker for even rows */
+    --header-text-color: #ffffff;
+    --button-green: #6dd5ed; /* Brighter, more modern green for button */
+    --button-green-hover: #5acae1;
+    --border-color: #dae8f5;
+    --text-color: #333;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+    --dark-blue-text: #2c3e50; /* Darker blue for "SECOND" */
+    --medium-blue-text: #4169e1; /* Royal Blue for "OPINION" */
+  }
+
+  body {
+    font-family: 'Inter', sans-serif; /* Modern, clean font */
+    background-color: var(--light-blue-bg);
+    display: flex;
+    flex-direction: column; /* Changed to column to stack heading and table */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .heading-container {
+    width: 95%;
+    max-width: 900px;
+    margin-bottom: 30px; /* Space between heading and table */
+    display: flex;
+    justify-content: center; /* Align heading to the left */
+    padding-left: 20px; /* Adjust padding to align with table content if needed */
+  }
+
+  .heading {
+    font-size: 3em; /* Larger font size for prominence */
+    font-weight: 700; /* Bold */
+    line-height: 1.1; /* Tighter line height */
+    text-align: left;
+  }
+
+  .heading .part1 {
+    color: var(--dark-blue-text);
+  }
+
+  .heading .part2 {
+    color: var(--medium-blue-text);
+  }
+
+  .table-container {
+    background-color: var(--container-bg);
+    border-radius: 18px; /* Slightly larger radius */
+    box-shadow: 0 8px 25px var(--shadow-medium); /* Softer, larger shadow */
+    width: 95%;
+    max-width: 900px; /* Increased max-width */
+    overflow: hidden; /* Ensures rounded corners are respected for content */
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse; /* Use collapse for more consistent borders */
+  }
+
+  th {
+    background-color: var(--primary-blue);
+    color: var(--header-text-color);
+    padding: 18px 15px; /* More padding */
+    text-align: left; /* Align headers to left */
+    font-size: 1.1em;
+    font-weight: 600; /* Medium bold */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Specific border-radius for th cells for top corners */
+  th:first-child {
+    border-top-left-radius: 18px;
+  }
+  th:last-child {
+    border-top-right-radius: 18px;
+  }
+
+  td {
+    padding: 15px; /* More padding for cells */
+    text-align: left; /* Align data to left */
+    font-size: 1em;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color); /* Lighter, more subtle border */
+  }
+
+  /* Alternating row colors for better readability */
+  tbody tr:nth-child(odd) {
+    background-color: var(--cell-bg-odd);
+  }
+  tbody tr:nth-child(even) {
+    background-color: var(--cell-bg-even);
+  }
+
+  /* Hover effect for table rows */
+  tbody tr:hover {
+    background-color: #e0f2f7; /* Lighter shade on hover */
+    cursor: pointer;
+  }
+
+  /* Remove bottom border for the last row */
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Align the button column to center */
+  td:last-child {
+    text-align: center;
+  }
+
+  .accept-button {
+    background-color: var(--button-green);
+    color: var(--text-color); /* Darker text for better contrast */
+    padding: 10px 25px; /* More padding */
+    border: none;
+    border-radius: 8px; /* Slightly larger radius for buttons */
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    box-shadow: 0 2px 5px var(--shadow-light); /* Subtle button shadow */
+  }
+
+  .accept-button:hover {
+    background-color: var(--button-green-hover);
+    transform: translateY(-1px); /* Slight lift effect */
+  }
+
+  .accept-button:active {
+    transform: translateY(0); /* Press down effect */
+    box-shadow: none;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .heading-container {
+      padding-left: 15px; /* Adjust for smaller screens */
+    }
+    .heading {
+      font-size: 2.2em; /* Smaller font for smaller screens */
+    }
+    .table-container {
+      border-radius: 10px;
+      padding: 15px;
+      width: 100%;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      font-size: 0.9em;
+    }
+
+    /* Force table to scroll horizontally on small screens */
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch; /* For smoother scrolling on iOS */
+    }
+
+    table {
+      min-width: 600px; /* Ensure a minimum width to enable scrolling */
+    }
+
+    th:first-child, th:last-child {
+      border-radius: 0; /* Remove specific radii for better flow on small screens */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .heading {
+      font-size: 1.8em;
+    }
+    th, td {
+      padding: 10px 8px;
+      font-size: 0.85em;
+    }
+    .accept-button {
+      padding: 8px 18px;
+      font-size: 0.8em;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="heading-container">
+    <div class="heading">
+      <span class="part1">SECOND</span><br>
+      <span class="part2">OPINION</span>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>EMAIL</th>
+          <th>CITY</th>
+          <th>REPORT</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pragati</td>
+          <td>Pragati@gmail.com</td>
+          <td>Bhopal</td>
+          <td>Report A</td>
+          <td><button class="accept-button">Accept</button></td>
+        </tr>
+        <tr>
+          <td>Sahil</td>
+          <td>Sahil@gmail.com</td>
+          <td>Bhopal</td>
+          <td>Report B</td>
+          <td><button class="accept-button">Accept</button></td>
+        </tr>
+        <tr>
+          <td>Ansh</td>
+          <td>Ansh@gmail.com</td>
+          <td>Bhopal</td>
+          <td>Report C</td>
+          <td><button class="accept-button">Accept</button></td>
+        </tr>
+        <tr>
+          <td>Akshat</td>
+          <td>akshat@gmail.com</td>
+          <td>Bhopal</td>
+          <td>Report D</td>
+          <td><button class="accept-button">Accept</button></td>
+        </tr>
+        <tr>
+          <td>Gopika</td>
+          <td>gopika@gmail.com</td>
+          <td>Bhopal</td>
+          <td>Report E</td>
+          <td><button class="accept-button">Accept</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

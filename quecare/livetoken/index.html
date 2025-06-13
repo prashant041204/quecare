@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Token Queue Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .back-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tracker-header {
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #1f3c88;
+            margin-bottom: 40px;
+        }
+
+        .tracker-header span {
+            color: #4169e1;
+        }
+
+        /* Visual Queue Section */
+        .visual-queue {
+            margin-bottom: 50px;
+        }
+
+        .visual-queue h2 {
+            color: #1f3c88;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.8rem;
+        }
+
+        .tokens-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .token {
+            flex: 1;
+            min-width: 160px;
+            text-align: center;
+            position: relative;
+        }
+
+        .token-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .token-circle.completed {
+            background: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        .token-circle.current {
+            background: #2196F3;
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+
+        .token-circle.start {
+            background: #9C27B0;
+            animation: bounce 1s infinite;
+        }
+
+        .token-circle.waiting {
+            background: #E0E0E0;
+            color: #666;
+        }
+
+        .token-number {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .token-name {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-completed {
+            background: #E8F5E8;
+            color: #4CAF50;
+        }
+
+        .status-end {
+            background: #E3F2FD;
+            color: #2196F3;
+        }
+
+        .status-start {
+            background: #F3E5F5;
+            color: #9C27B0;
+        }
+
+        .status-waiting {
+            background: #F5F5F5;
+            color: #666;
+        }
+
+        .connection-line {
+            height: 4px;
+            background: #E0E0E0;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            right: -50%;
+            z-index: 1;
+        }
+
+        .token:last-child .connection-line {
+            display: none;
+        }
+
+        .connection-line.active {
+            background: linear-gradient(90deg, #4CAF50 0%, #2196F3 100%);
+        }
+
+        .check-icon {
+            font-size: 30px;
+        }
+
+        .current-indicator {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background: #FF5722;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Live Tracker Section */
+        .wait-time-section {
+            background-color: #f8f9ff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        }
+
+        .wait-time-section h3 {
+            margin-bottom: 20px;
+            color: #1f3c88;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .currently-serving {
+            background-color: #e6f7ff;
+            border-left: 4px solid #1890ff;
+        }
+
+        .list-group-item {
+            border: 1px solid #e9ecef;
+            margin-bottom: 8px;
+            border-radius: 8px !important;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 20px rgba(33, 150, 243, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(33, 150, 243, 0.8); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px;
+            }
+            
+            .tokens-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .token {
+                margin-bottom: 30px;
+            }
+            
+            .connection-line {
+                display: none;
+            }
+
+            .tracker-header {
+                font-size: 2rem;
+            }
+        }
+
+        /* Status indicators */
+        .live-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #667eea 50%, transparent 100%);
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="/homewithout" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+
+    <div class="main-container">
+        <div class="tracker-header">
+            <span class="live-indicator"></span>
+            LIVE TOKEN <span>TRACKER</span>
+        </div>
+
+        <!-- Visual Queue Progress Section -->
+        <div class="visual-queue">
+            <h2><i class="fas fa-users"></i> Current Queue Status</h2>
+            <div class="tokens-wrapper" id="visual-tokens">
+                <!-- Visual tokens will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Live Token Tracker Section -->
+        <div class="wait-time-section">
+            <h3><i class="fas fa-clock"></i> Estimated Wait Times</h3>
+            <ul class="list-group wait-time-list" id="token-list">
+                <!-- Live token list will be populated by JavaScript -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Combined token data with both visual and timing information
+        let currentTokenData = [
+            { token: 42, name: 'Pragati', status: 'completed', position: 0 },
+            { token: 43, name: 'Sahil', status: 'current', position: 1 },
+            { token: 44, name: 'Ansh', status: 'start', position: 2 },
+            { token: 45, name: 'Akshat', status: 'waiting', position: 3 },
+            { token: 46, name: 'Gopika', status: 'waiting', position: 4 }
+        ];
+
+        function generateLiveTokenData(baseData) {
+            const tokens = [];
+            const now = new Date();
+            const AVG_PROCESSING_TIME = 5; // minutes per patient
+            
+            baseData.forEach((tokenData, i) => {
+                if (tokenData.status === 'completed') return; // Skip completed tokens
+                
+                const waitMinutes = (i === 1) ? 5 : (i * AVG_PROCESSING_TIME);
+                const estimatedTime = new Date(now.getTime() + waitMinutes * 60000);
+                
+                tokens.push({
+                    token: tokenData.token,
+                    name: tokenData.name,
+                    wait_time: waitMinutes === 1 ? '1 minute' : `${waitMinutes} minutes`,
+                    status: tokenData.status === 'current' ? 'Currently Serving' : 'Waiting',
+                    estimated_ready_time: estimatedTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    position: tokenData.position,
+                    original_status: tokenData.status
+                });
+            });
+            
+            return tokens;
+        }
+
+        function displayVisualTokens() {
+            const container = document.getElementById('visual-tokens');
+            container.innerHTML = '';
+
+            currentTokenData.forEach((tokenData, index) => {
+                const tokenDiv = document.createElement('div');
+                tokenDiv.className = 'token';
+                
+                let statusClass = '';
+                let statusLabel = '';
+                let circleContent = '●';
+                
+                switch(tokenData.status) {
+                    case 'completed':
+                        statusClass = 'completed';
+                        statusLabel = 'Completed';
+                        circleContent = '<span class="check-icon">✓</span>';
+                        break;
+                    case 'current':
+                        statusClass = 'current';
+                        statusLabel = 'Now Serving';
+
+                        break;
+                    case 'start':
+                        statusClass = 'start';
+                        statusLabel = 'Next';
+                        break;
+                    default:
+                        statusClass = 'waiting';
+                        statusLabel = 'Waiting';
+                }
+
+                const connectionLine = index < currentTokenData.length - 1 ? 
+                    `<div class="connection-line ${index === 0 ? 'active' : ''}"></div>` : '';
+
+                tokenDiv.innerHTML = `
+                    ${connectionLine}
+                    <div class="token-number">Token No. ${tokenData.token}</div>
+                    <div class="token-circle ${statusClass}">
+                        ${circleContent}
+                    </div>
+                    <div class="token-name">${tokenData.name}</div>
+                    <div class="status-badge status-${statusClass}">${statusLabel}</div>
+                `;
+
+                container.appendChild(tokenDiv);
+            });
+        }
+
+        function displayLiveTokens() {
+            const data = generateLiveTokenData(currentTokenData);
+            const list = document.getElementById('token-list');
+            list.innerHTML = '';
+
+            if (data.length === 0) {
+                list.innerHTML = '<li class="list-group-item text-center">No active tokens.</li>';
+                return;
+            }
+
+            data.forEach(token => {
+                const li = document.createElement('li');
+                li.className = `list-group-item ${token.status === 'Currently Serving' ? 'currently-serving' : ''}`;
+                li.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Token ${token.token} - ${token.name}</strong>
+                            ${token.status === 'Currently Serving' ? 
+                                '<span class="badge bg-primary ms-2">Now Serving</span>' : 
+                                `<span class="text-muted small ms-2">Position: ${token.position}</span>`}
+                        </div>
+                        <div class="text-end">
+                            <div>${token.wait_time}</div>
+                            <div class="small text-muted">~ ${token.estimated_ready_time}</div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function updateTokenSystem() {
+            // Simulate token progression
+            const completedTokens = currentTokenData.filter(t => t.status === 'completed').length;
+            const totalTokens = currentTokenData.length;
+            
+            if (completedTokens < totalTokens - 1) {
+                // Move tokens forward occasionally
+                if (Math.random() < 0.3) { // 30% chance to progress
+                    currentTokenData.forEach((token, index) => {
+                        if (token.status === 'current') {
+                            token.status = 'completed';
+                        } else if (token.status === 'start') {
+                            token.status = 'current';
+                        } else if (token.status === 'waiting' && index === currentTokenData.findIndex(t => t.status === 'start') + 1) {
+                            token.status = 'start';
+                        }
+                    });
+                }
+            }
+            
+            displayVisualTokens();
+            displayLiveTokens();
+        }
+
+        // Add click handlers for visual tokens
+        function addTokenClickHandlers() {
+            document.addEventListener('click', function(e) {
+                const token = e.target.closest('.token');
+                if (token) {
+                    const name = token.querySelector('.token-name').textContent;
+                    const status = token.querySelector('.status-badge').textContent;
+                    const tokenNumber = token.querySelector('.token-number').textContent;
+                    alert(`${tokenNumber}\nHolder: ${name}\nStatus: ${status}`);
+                }
+            });
+        }
+
+        // Initialize the system
+        displayVisualTokens();
+        displayLiveTokens();
+        addTokenClickHandlers();
+
+        // Update every 15 seconds
+        setInterval(updateTokenSystem, 15000);
+
+        // Update live times every 30 seconds
+        setInterval(displayLiveTokens, 30000);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

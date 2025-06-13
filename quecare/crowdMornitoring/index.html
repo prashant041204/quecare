@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Everyday Crowd Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Color Palette (consistent with previous UIs) */
+    --primary-blue: #4169e1;
+    --light-blue-bg: #f0f8ff;
+    --container-bg: #e6f0fa; /* Slightly warmer light blue */
+    --cell-bg-odd: #f5fafd; /* Very light, almost white for odd rows */
+    --cell-bg-even: #eef7fc; /* Slightly darker for even rows */
+    --header-text-color: #ffffff;
+    --button-green: #6dd5ed; /* Brighter, more modern green for button */
+    --button-green-hover: #5acae1;
+    --border-color: #dae8f5;
+    --text-color: #333;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.12);
+    --dark-blue-text: #2c3e50; /* Darker blue for headings */
+    --medium-blue-text: #4169e1; /* Royal Blue for headings */
+
+    /* Specific for trend status */
+    --trend-stable: #28a745; /* Green for stable */
+    --trend-increasing: #fd7e14; /* Orange for increasing */
+    --trend-decreasing: #007bff; /* Blue for decreasing */
+    --trend-high-avg: #dc3545; /* Red for high average */
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--light-blue-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 20px;
+    box-sizing: border-box;
+  }
+
+  .heading-container {
+    width: 95%;
+    max-width: 900px; /* Max-width for this table */
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0px;
+    align-self: center;
+    text-align: left;
+  }
+
+  .heading {
+    font-size: 3em;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .heading .part1 {
+    color: var(--dark-blue-text);
+  }
+
+  .heading .part2 {
+    color: var(--medium-blue-text);
+  }
+
+  .table-container {
+    background-color: var(--container-bg);
+    border-radius: 18px;
+    box-shadow: 0 8px 25px var(--shadow-medium);
+    width: 95%;
+    max-width: 900px; /* Max-width for this table */
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background-color: var(--primary-blue);
+    color: var(--header-text-color);
+    padding: 18px 15px;
+    text-align: left;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  th:first-child {
+    border-top-left-radius: 18px;
+  }
+  th:last-child {
+    border-top-right-radius: 18px;
+  }
+
+  td {
+    padding: 15px;
+    text-align: left;
+    font-size: 1em;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: var(--cell-bg-odd);
+  }
+  tbody tr:nth-child(even) {
+    background-color: var(--cell-bg-even);
+  }
+
+  tbody tr:hover {
+    background-color: #e0f2f7;
+    cursor: pointer;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Specific column alignment */
+  td.center-align {
+    text-align: center;
+  }
+  td.right-align {
+    text-align: right;
+  }
+
+  .trend-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px; /* Pill shape */
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    color: white; /* Default text color for tags */
+  }
+
+  .trend-tag.stable {
+    background-color: var(--trend-stable);
+  }
+
+  .trend-tag.increasing {
+    background-color: var(--trend-increasing);
+    color: #333; /* Darker text for better visibility on amber */
+  }
+
+  .trend-tag.decreasing {
+    background-color: var(--trend-decreasing);
+  }
+
+  .trend-tag.high-avg {
+    background-color: var(--trend-high-avg);
+  }
+
+  .action-button {
+    background-color: var(--button-green);
+    color: var(--text-color);
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px var(--shadow-light);
+    margin: 0 5px;
+  }
+
+  .action-button:hover {
+    background-color: var(--button-green-hover);
+    transform: translateY(-1px);
+  }
+
+  .action-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 950px) {
+    .table-container, .heading-container {
+      max-width: 90%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .heading {
+      font-size: 2.2em;
+    }
+    .table-container {
+      border-radius: 10px;
+      padding: 15px;
+      width: 100%;
+      overflow-x: auto; /* Enable horizontal scroll */
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      min-width: 800px; /* Ensure enough width for scrolling */
+    }
+    th, td {
+      padding: 12px 10px;
+      font-size: 0.9em;
+    }
+    .action-button {
+      padding: 6px 15px;
+      font-size: 0.8em;
+    }
+    th:first-child, th:last-child {
+      border-radius: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .heading {
+      font-size: 1.8em;
+    }
+    th, td {
+      padding: 10px 8px;
+      font-size: 0.8em;
+    }
+    .trend-tag {
+      padding: 4px 8px;
+      font-size: 0.7em;
+    }
+    .action-button {
+      padding: 5px 10px;
+      font-size: 0.75em;
+      margin: 0 2px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="heading-container">
+    <div class="heading">
+      <span class="part1">EVERYDAY</span><br>
+      <span class="part2">CROWD</span>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Peak Count</th>
+          <th>Avg. Count</th>
+          <th>Duration Peak</th>
+          <th>Overall Trend</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2025-06-12</td>
+          <td class="right-align">580</td>
+          <td class="right-align">320</td>
+          <td class="center-align">2 PM - 4 PM</td>
+          <td class="center-align"><span class="trend-tag stable">Stable</span></td>
+          <td>No major incidents.</td>
+          <td class="center-align">
+            <button class="action-button">Adjust</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2025-06-11</td>
+          <td class="right-align">710</td>
+          <td class="right-align">450</td>
+          <td class="center-align">1 PM - 3 PM</td>
+          <td class="center-align"><span class="trend-tag increasing">Increasing</span></td>
+          <td>Event caused higher traffic.</td>
+          <td class="center-align">
+            <button class="action-button">Adjust</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2025-06-10</td>
+          <td class="right-align">490</td>
+          <td class="right-align">280</td>
+          <td class="center-align">12 PM - 2 PM</td>
+          <td class="center-align"><span class="trend-tag stable">Stable</span></td>
+          <td>Normal weekday activity.</td>
+          <td class="center-align">
+            <button class="action-button">Adjust</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2025-06-09</td>
+          <td class="right-align">850</td>
+          <td class="right-align">600</td>
+          <td class="center-align">3 PM - 5 PM</td>
+          <td class="center-align"><span class="trend-tag high-avg">High Avg</span></td>
+          <td>Weekend peak.</td>
+          <td class="center-align">
+            <button class="action-button">Adjust</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2025-06-08</td>
+          <td class="right-align">620</td>
+          <td class="right-align">380</td>
+          <td class="center-align">11 AM - 1 PM</td>
+          <td class="center-align"><span class="trend-tag decreasing">Decreasing</span></td>
+          <td>Slight drop post-event.</td>
+          <td class="center-align">
+            <button class="action-button">Adjust</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
