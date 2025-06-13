@@ -1,0 +1,176 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recovery Status</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: #eaf4ff;
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        padding-top: 40px;
+      }
+  
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+      }
+  
+      .title-main {
+        color: #2c2c2c;
+        font-weight: bold;
+        font-size: 24px;
+      }
+  
+      .title-sub {
+        color: #3d68ff;
+        font-size: 24px;
+      }
+  
+      .form {
+        margin: 30px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+  
+      .form input {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 12px;
+        background: #d9e7ff;
+        font-size: 16px;
+      }
+  
+      .status-title {
+        color: #333;
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+  
+      .status-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 30px;
+      }
+  
+      .status-box {
+        padding: 12px;
+        border-radius: 12px;
+        color: white;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+      }
+  
+      .status-box:hover {
+        transform: scale(1.02);
+      }
+  
+      .status-label {
+        margin: 0;
+        font-weight: bold;
+      }
+  
+      .red { background: #f77b7b; }
+      .orange { background: #ffc18a; color: #333; }
+      .green { background: #82e382; }
+  
+      .status-box.selected {
+        border: 3px solid #3d68ff;
+        box-shadow: 0 0 10px rgba(61, 104, 255, 0.2);
+      }
+  
+      .submit-btn {
+        padding: 12px 25px;
+        font-size: 16px;
+        background: #3d68ff;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+  
+      .submit-btn:hover {
+        background: #294fd2;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/homewithout" style="position: fixed; top: 20px; right: 20px; z-index: 1000; text-decoration: none;">
+      <button style="background-color: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+        <i class="fas fa-home"></i> Back to Home
+      </button>
+    </a>
+  
+    <div class="container">
+      <h1><span class="title-main">RECOVERY</span> <span class="title-sub">STATUS</span></h1>
+      
+      <form class="form" id="recoveryForm">
+        <input type="text" placeholder="Name:" required="">
+        <input type="number" placeholder="Age:" required="">
+        <input type="text" placeholder="Hospital:" required="">
+        <input type="date" placeholder="Date of visit:" required="">
+        <input type="text" placeholder="Diagnosis:" required="">
+      </form>
+  
+      <h2 class="status-title">YOUR CURRENT STATUS</h2>
+  
+      <div class="status-options" id="statusOptions">
+        <div class="status-box red" data-value="Needs Follow-Up">
+          <p class="status-label">Needs Follow-Up</p>
+          <small>Symptoms persist, requiring a doctor’s review.</small>
+        </div>
+        <div class="status-box orange" data-value="Still Under Care">
+          <p class="status-label">Still Under Care</p>
+          <small>Requires ongoing treatment or monitoring.</small>
+        </div>
+        <div class="status-box green" data-value="Fully Recovered">
+          <p class="status-label">Fully Recovered</p>
+          <small>No further medical attention needed.</small>
+        </div>
+      </div>
+  
+      <button class="submit-btn" onclick="submitForm()">Submit</button>
+    </div>
+  
+    <script>
+      const statusBoxes = document.querySelectorAll(".status-box");
+      let selectedStatus = "";
+  
+      statusBoxes.forEach(box => {
+        box.addEventListener("click", () => {
+          statusBoxes.forEach(b => b.classList.remove("selected"));
+          box.classList.add("selected");
+          selectedStatus = box.getAttribute("data-value");
+        });
+      });
+  
+      function submitForm() {
+        event.preventDefault();
+  
+        if (!selectedStatus) {
+          alert("Please select your current status.");
+          return;
+        }
+  
+        // For demonstration: log the selected status
+        console.log("Selected Status:", selectedStatus);
+  
+        // You can now handle form + status as needed (send to server, etc.)
+        alert("Form submitted with status: " + selectedStatus);
+      }
+    </script>
+  
+  
+  </body></html>

@@ -1,0 +1,206 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crowd Monitoring</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #eaf4ff;
+      }
+  
+      .container {
+        max-width: 1000px;
+        margin: auto;
+        padding: 30px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 40px;
+      }
+  
+      h1 {
+        font-size: 26px;
+        text-align: left;
+      }
+  
+      .highlight {
+        color: #3d68ff;
+        font-weight: bold;
+      }
+  
+      .form-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+        justify-content: center;
+      }
+  
+      select, input[type="date"] {
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        background: #d9e7ff;
+        font-size: 16px;
+        min-width: 160px;
+      }
+  
+      button {
+        padding: 10px 25px;
+        background: #3d68ff;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+      }
+  
+      .chart-container {
+        margin-top: 40px;
+        display: none;
+      }
+  
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+  
+      .chart-box {
+        background: #f0f6ff;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      }
+  
+      .chart-box h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #3d68ff;
+        text-align: center;
+      }
+  
+      canvas {
+        width: 100% !important;
+        height: 200px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>CROWD <span class="highlight">MONITORING</span></h1>
+  
+      <div class="form-group">
+        <select id="state">
+          <option>Select your state</option>
+          <option>Maharashtra</option>
+          <option>Karnataka</option>
+        </select>
+        <select id="city">
+          <option>Select your city</option>
+          <option>Mumbai</option>
+          <option>Bangalore</option>
+        </select>
+        <select id="hospital">
+          <option>Select hospital</option>
+          <option>City Hospital</option>
+          <option>Metro Hospital</option>
+        </select>
+        <input type="date" id="date">
+        
+      </div>
+  
+      <div style="text-align: center;">
+        <button onclick="renderCharts()">Submit</button>
+      </div>
+  
+      <div class="chart-container" id="chartContainer">
+        <div class="grid">
+          <div class="chart-box">
+            <h3>Morning</h3>
+            <canvas id="morningChart"></canvas>
+          </div>
+          <div class="chart-box">
+            <h3>Afternoon</h3>
+            <canvas id="afternoonChart"></canvas>
+          </div>
+          <div class="chart-box">
+            <h3>Evening</h3>
+            <canvas id="eveningChart"></canvas>
+          </div>
+          <div class="chart-box">
+            <h3>Night</h3>
+            <canvas id="nightChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <script>
+      const timeLabels = ['8AM', '10AM', '12PM', '2PM', '4PM', '6PM'];
+  
+      function generateRandomData() {
+        return timeLabels.map(() => Math.floor(Math.random() * 100));
+      }
+  
+      let charts = {};
+  
+      function renderCharts() {
+        document.getElementById('chartContainer').style.display = 'block';
+  
+        const datasets = {
+          morningChart: generateRandomData(),
+          afternoonChart: generateRandomData(),
+          eveningChart: generateRandomData(),
+          nightChart: generateRandomData()
+        };
+  
+        const colors = {
+          morningChart: '#2ecc71',
+          afternoonChart: '#e67e22',
+          eveningChart: '#9b59b6',
+          nightChart: '#3498db'
+        };
+  
+        for (const [id, data] of Object.entries(datasets)) {
+          if (charts[id]) {
+            charts[id].destroy();
+          }
+  
+          const ctx = document.getElementById(id).getContext('2d');
+          charts[id] = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: timeLabels,
+              datasets: [{
+                label: 'Crowd Level (%)',
+                data: data,
+                borderColor: colors[id],
+                backgroundColor: colors[id] + '33', // Transparent fill
+                fill: true,
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 100,
+                  title: {
+                    display: true,
+                    text: 'Crowd (%)'
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+    </script>
+  
+  
+  </body></html>

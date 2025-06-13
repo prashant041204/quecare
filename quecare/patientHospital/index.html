@@ -1,0 +1,271 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUECARE - Hospital Finder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            margin: 0 0.5rem;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .search-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            padding: 0.5rem 2rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+        }
+        
+        .hospital-card {
+            border-left: 4px solid var(--secondary-color);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .hospital-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        .rating {
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/homewithout">QUECARE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/homewithout">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Specialties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Hospitals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">QPO</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/homewithout">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="display-4 mb-4">Find the Best Hospitals in India</h1>
+            <p class="lead">Your trusted Medical Center, just a click away.</p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="search-card">
+                    <h3 class="mb-4">Find the Right Hospital for Your Needs</h3>
+                    <form id="hospitalSearchForm">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="state" class="form-label">State</label>
+                                <select class="form-select" id="state" required="">
+                                    <option value="" selected="" disabled="">Select State</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Delhi">Delhi</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="city" class="form-label">City</label>
+                                <select class="form-select" id="city" required="" disabled="">
+                                    <option value="" selected="" disabled="">Select City</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="specialty" class="form-label">Specialty</label>
+                                <select class="form-select" id="specialty" required="">
+                                    <option value="" selected="" disabled="">Select Specialty</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="dermatology">Dermatology</option>
+                                    <option value="neurology">Neurology</option>
+                                    <option value="orthopedics">Orthopedics</option>
+                                    <option value="pediatrics">Pediatrics</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search Hospitals</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hospital Results -->
+    <section id="hospitalResults" class="container my-5" style="display: none;">
+        <h2 class="mb-4">Recommended Hospitals</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card hospital-card p-3">
+                    <div class="d-flex justify-content-between">
+                        <h4 id="hospital1Name">City General Hospital</h4>
+                        <div class="rating">★★★★☆ <small>(4.2)</small></div>
+                    </div>
+                    <p class="text-muted mb-2"><i class="bi bi-geo-alt-fill"></i> <span id="hospital1Address">123 Medical Drive</span></p>
+                    <p class="mb-3" id="hospital1Specialty">Top-rated facility with excellent cardiology department and 24/7 emergency care.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary" id="hospital1Badge">Cardiology</span>
+                        <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card hospital-card p-3">
+                    <div class="d-flex justify-content-between">
+                        <h4 id="hospital2Name">Sunrise Medical Center</h4>
+                        <div class="rating">★★★★★ <small>(4.8)</small></div>
+                    </div>
+                    <p class="text-muted mb-2"><i class="bi bi-geo-alt-fill"></i> <span id="hospital2Address">456 Health Ave</span></p>
+                    <p class="mb-3" id="hospital2Specialty">State-of-the-art facility with renowned specialists.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success" id="hospital2Badge">Dermatology</span>
+                        <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Indian states and cities data
+        const cityData = {
+            'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Nashik', 'Aurangabad'],
+            'Delhi': ['New Delhi', 'Noida', 'Gurgaon', 'Faridabad', 'Ghaziabad'],
+            'Karnataka': ['Bengaluru', 'Mysuru', 'Hubli', 'Mangaluru', 'Belagavi'],
+            'Tamil Nadu': ['Chennai', 'Coimbatore', 'Madurai', 'Tiruchirappalli', 'Salem'],
+            'Uttar Pradesh': ['Lucknow', 'Kanpur', 'Varanasi', 'Agra', 'Prayagraj'],
+            'West Bengal': ['Kolkata', 'Howrah', 'Durgapur', 'Asansol', 'Siliguri'],
+            'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Gandhinagar'],
+            'Rajasthan': ['Jaipur', 'Jodhpur', 'Udaipur', 'Kota', 'Bikaner']
+        };
+
+        // State change handler
+        document.getElementById('state').addEventListener('change', function() {
+            const state = this.value;
+            const citySelect = document.getElementById('city');
+            
+            citySelect.innerHTML = '<option value="" selected disabled>Select City</option>';
+            citySelect.disabled = !state;
+            
+            if (state && cityData[state]) {
+                cityData[state].forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+                citySelect.disabled = false;
+            }
+        });
+
+        // Form submission handler
+        document.getElementById('hospitalSearchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const state = document.getElementById('state').value;
+            const city = document.getElementById('city').value;
+            const specialty = document.getElementById('specialty').value;
+            
+            if (!state || !city || !specialty) {
+                alert('Please select state, city and specialty!');
+                return;
+            }
+            
+            // Update results with selected location/specialty
+            document.getElementById('hospital1Name').textContent = `${city} General Hospital`;
+            document.getElementById('hospital1Address').textContent = `123 Medical Drive, ${city}, ${state}`;
+            document.getElementById('hospital1Specialty').textContent = `Top-rated ${specialty} facility in ${city}`;
+            document.getElementById('hospital1Badge').textContent = specialty.charAt(0).toUpperCase() + specialty.slice(1);
+            
+            document.getElementById('hospital2Name').textContent = `${state} Specialty Hospital`;
+            document.getElementById('hospital2Address').textContent = `456 ${city} Health Ave, ${state}`;
+            document.getElementById('hospital2Specialty').textContent = `State-of-the-art ${specialty} center with renowned specialists`;
+            document.getElementById('hospital2Badge').textContent = specialty.charAt(0).toUpperCase() + specialty.slice(1);
+            
+            // Show results
+            document.getElementById('hospitalResults').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('hospitalResults').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+
+</body></html>

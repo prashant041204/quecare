@@ -1,0 +1,519 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Spot</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .booking-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .booking-header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        
+        .booking-header h1 {
+            font-size: 28px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-section {
+            text-align: center;
+        }
+        
+        .footer-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .footer-section a {
+            display: block;
+            color: #7f8c8d;
+            text-decoration: none;
+            margin-bottom: 8px;
+        }
+        
+        .footer-section a:hover {
+            color: #3498db;
+        }
+        
+        .submit-btn {
+            background-color: #3F5DD8;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #0e2f90;
+        }
+        
+        .qr-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px dashed #ddd;
+            display: none;
+        }
+        
+        #qrcode {
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+        
+        .qr-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .qr-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+        }
+        
+        .generate-qr {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .download-qr {
+            background-color: #e67e22;
+            color: white;
+        }
+
+        /* Feedback Section Styles */
+        .feedback-section {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .feedback-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .feedback-section p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .testimonials {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .testimonial {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 300px;
+            text-align: left;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: #34495e;
+        }
+
+        .testimonial-author {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .testimonial-role {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Footer Table Styles */
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+
+        .footer-table th {
+            background-color: #3F5DD8;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .footer-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .footer-table a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .footer-table a:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        /* Back button styles */
+        .back-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .qr-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .testimonials {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="back-button" href="/homewithout">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+    
+    <div class="booking-container">
+        <div class="booking-header">
+            <h1>Book Your Spot!</h1>
+        </div>
+        
+        <form id="bookingForm">
+            <div class="form-group">
+                <label for="name">Name of the Patient</label>
+                <input type="text" id="name" required="">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" required="">
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="text" id="dob" placeholder="dd/mm/yyyy" required="">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="speciality">Select Speciality</label>
+                <select id="speciality" required="">
+                    <option value="">-- Select --</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="neurology">Neurology</option>
+                    <option value="orthopedics">Orthopedics</option>
+                    <option value="pediatrics">Pediatrics</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date">Select Date and Time</label>
+                    <input type="datetime-local" id="date" required="">
+                </div>
+                <div class="form-group">
+                    <label for="hospital">Preferred Hospital</label>
+                    <select id="hospital" required="">
+                        <option value="">-- Select Hospital --</option>
+                        <option value="Apollo Hospitals">Apollo Hospitals</option>
+                        <option value="Fortis Hospital">Fortis Hospital</option>
+                        <option value="Max Super Speciality Hospital">Max Super Speciality Hospital</option>
+                        <option value="AIIMS">AIIMS</option>
+                        <option value="Manipal Hospital">Manipal Hospital</option>
+                        <option value="Medanta - The Medicity">Medanta - The Medicity</option>
+                        <option value="Kokilaben Dhirubhai Ambani Hospital">Kokilaben Dhirubhai Ambani Hospital</option>
+                        <option value="Artemis Hospital">Artemis Hospital</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="payment">Payment Option</label>
+                <select id="payment" required="">
+                    <option value="">-- Select --</option>
+                    <option value="credit">Credit Card</option>
+                    <option value="debit">Debit Card</option>
+                    <option value="insurance">Insurance</option>
+                    <option value="cash">Cash</option>
+                    <option value="upi">UPI</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-btn">Generate QR</button>
+        </form>
+        
+        <div class="qr-section" id="qrSection">
+            <h3>Your Booking QR Code</h3>
+            <div id="qrcode"></div>
+            <p>Scan this QR code to confirm your check-in</p>
+            <div class="qr-buttons">
+                <button class="qr-btn generate-qr" onclick="generateQR()">Regenerate QR</button>
+                <button class="qr-btn download-qr" onclick="downloadQR()">Download QR</button>
+            </div>
+        </div>
+        
+        <!-- Feedback Section -->
+        <div class="feedback-section">
+            <h2>Read feedback about our Services and wonderful team!</h2>
+            <p>We take care of our patients just like a family member - Read the testimonials from our patients.</p>
+            
+            <div class="testimonials">
+                <div class="testimonial">
+                    <div class="testimonial-text">Amazing team and amazing treatment from the best doctor in the world</div>
+                    <div class="testimonial-author">Aditya</div>
+                    <div class="testimonial-role">Patient</div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-text">Excellent care and support throughout my treatment</div>
+                    <div class="testimonial-author">Kiskul</div>
+                    <div class="testimonial-role">Patient</div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-text">Professional staff and clean facilities</div>
+                    <div class="testimonial-author">Hersh</div>
+                    <div class="testimonial-role">Patient</div>
+                </div>
+                
+                <div class="testimonial">
+                    <div class="testimonial-text">Quick diagnosis and effective treatment</div>
+                    <div class="testimonial-author">Arya</div>
+                    <div class="testimonial-role">Patient</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer Table -->
+        <table class="footer-table">
+            <tbody><tr>
+                <th>Explore</th>
+                <th>About Us</th>
+                <th>Contact</th>
+            </tr>
+            <tr>
+                <td><a href="/homewithout">Home</a></td>
+                <td>Who we are</td>
+                <td>HR 9171018884</td>
+            </tr>
+            <tr>
+                <td><a href="#">Surgery</a></td>
+                <td>Our wishes</td>
+                <td>quecare.com</td>
+            </tr>
+            <tr>
+                <td><a href="#">Emergency</a></td>
+                <td>Our Team</td>
+                <td>VIT Bhopal University, Kotri</td>
+            </tr>
+            <tr>
+                <td><a href="/homewithout">Speciality</a></td>
+                <td>Terms &amp; Conditions</td>
+                <td>Kalan, Bhopal, MP</td>
+            </tr>
+            <tr>
+                <td><a href="/doctor">Consultation</a></td>
+                <td>FAQs</td>
+                <td></td>
+            </tr>
+        </tbody></table>
+        
+        <div class="copyright">
+            Copyright 2025, All Rights Reserved
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                contact: document.getElementById('contact').value,
+                dob: document.getElementById('dob').value,
+                speciality: document.getElementById('speciality').value,
+                date: document.getElementById('date').value,
+                hospital: document.getElementById('hospital').value,
+                address: document.getElementById('address').value,
+                payment: document.getElementById('payment').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Generate booking ID
+            const bookingId = 'BK-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+            formData.bookingId = bookingId;
+            
+            // Generate QR code
+            generateQR(JSON.stringify(formData));
+            
+            // Show QR section
+            document.getElementById('qrSection').style.display = 'block';
+            
+            // Scroll to QR section
+            document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        function generateQR(data = null) {
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Use provided data or get from form
+            const qrData = data || JSON.stringify({
+                name: document.getElementById('name').value,
+                contact: document.getElementById('contact').value,
+                bookingId: 'BK-' + Math.random().toString(36).substr(2, 8).toUpperCase()
+            });
+            
+            // Generate new QR code
+            new QRCode(document.getElementById('qrcode'), {
+                text: qrData,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+        
+        function downloadQR() {
+            const qrElement = document.getElementById('qrcode');
+            const canvas = qrElement.querySelector('canvas');
+            
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'booking-qr.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+        }
+    </script>
+
+</body></html>
