@@ -1,0 +1,105 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QueCare Dashboard</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #EAF0FF;
+    }
+    .dashboard-header {
+      background-color: #2E64FE;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dashboard-content {
+      padding: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .user-welcome {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    .logout-btn {
+      background: white;
+      color: #2E64FE;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-header">
+    <h1>QueCare Dashboard</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="user-welcome" id="welcomeMessage">
+      Welcome back!
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <h3>Appointments</h3>
+        <p>Schedule and manage your healthcare appointments</p>
+      </div>
+      <div class="feature-card">
+        <h3>Medical Records</h3>
+        <p>Access your health history and test results</p>
+      </div>
+      <div class="feature-card">
+        <h3>Prescriptions</h3>
+        <p>View and refill your medications</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check authentication status on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.netlifyIdentity) {
+        const user = netlifyIdentity.currentUser();
+        
+        if (!user) {
+          // If not logged in, redirect to login page
+          window.location.href = '/';
+          return;
+        }
+
+        // Update welcome message
+        document.getElementById('welcomeMessage').textContent = 
+          `Welcome back, ${user.email.split('@')[0]}!`;
+      }
+    });
+
+    function logout() {
+      netlifyIdentity.logout().then(() => {
+        window.location.href = '/';
+      });
+    }
+  </script>
+</body>
+</html>
